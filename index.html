@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الذكاء الاصطناعي في الموارد البشرية — فرز السير الذاتية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=Amiri:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a2c4e;
+    --ink-deep: #0d1f38;
+    --paper: #f9f7f4;
+    --paper-warm: #f1ece3;
+    --gold: #b8913a;
+    --gold-deep: #8e6c22;
+    --accent: #c04b2a;
+    --muted: #6a6560;
+    --line: rgba(26, 44, 78, 0.13);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: var(--paper);
+    color: var(--ink-deep);
+    font-size: 17px;
+    line-height: 1.85;
+    direction: rtl;
+    overflow-x: hidden;
+  }
+
+  .en { font-family: 'Playfair Display', serif; font-style: italic; }
+  .num { font-family: 'Playfair Display', serif; }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 15% 25%, rgba(184,145,58,0.05) 0%, transparent 50%),
+      radial-gradient(circle at 85% 75%, rgba(26,44,78,0.04) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 96vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 48px 32px 60px;
+    border-bottom: 1px solid var(--line);
+    position: relative;
+  }
+
+  .hero-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+
+  .badge {
+    background: var(--accent);
+    color: var(--paper);
+    padding: 6px 14px;
+    border-radius: 2px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    font-size: 11px;
+  }
+
+  .hero-center {
+    max-width: 920px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 56px 0;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Amiri', serif;
+    font-style: italic;
+    color: var(--gold-deep);
+    font-size: 20px;
+    margin-bottom: 22px;
+  }
+
+  .hero h1 {
+    font-weight: 900;
+    font-size: clamp(36px, 5.5vw, 68px);
+    line-height: 1.12;
+    color: var(--ink);
+    margin-bottom: 26px;
+    letter-spacing: -0.02em;
+  }
+
+  .hero h1 .accent {
+    color: var(--accent);
+    position: relative;
+  }
+
+  .hero h1 .accent::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    right: 0; left: 0;
+    height: 7px;
+    background: rgba(184,145,58,0.22);
+    z-index: -1;
+  }
+
+  .hero-sub {
+    font-size: 20px;
+    color: var(--muted);
+    max-width: 680px;
+    margin: 0 auto;
+    font-weight: 300;
+    line-height: 1.65;
+  }
+
+  .hero-bottom {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 28px;
+    padding-top: 36px;
+    border-top: 1px solid var(--line);
+  }
+
+  .stat { text-align: right; }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 52px;
+    line-height: 1;
+    color: var(--ink);
+    margin-bottom: 7px;
+  }
+
+  .stat-num .unit {
+    font-size: 20px;
+    color: var(--gold-deep);
+    margin-right: 4px;
+  }
+
+  .stat-label {
+    font-size: 12.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    line-height: 1.45;
+  }
+
+  /* ===== NAV ===== */
+  .nav {
+    position: sticky;
+    top: 0;
+    background: rgba(249,247,244,0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 100;
+    border-bottom: 1px solid var(--line);
+    padding: 15px 0;
+  }
+
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .nav-logo {
+    font-weight: 700;
+    color: var(--ink);
+    font-size: 14px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 26px;
+    list-style: none;
+    flex-wrap: wrap;
+  }
+
+  .nav-links a {
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 500;
+    transition: color 0.2s;
+    position: relative;
+    padding-bottom: 3px;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 0; height: 2px;
+    background: var(--accent);
+    transition: width 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* ===== SECTIONS ===== */
+  section { padding: 96px 0; position: relative; }
+
+  .section-eyebrow {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--gold-deep);
+    font-size: 17px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-eyebrow::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .section-eyebrow .ch {
+    font-family: 'Playfair Display', serif;
+    color: var(--accent);
+    font-weight: 900;
+    font-size: 26px;
+    line-height: 1;
+  }
+
+  .section-title {
+    font-size: clamp(30px, 3.8vw, 46px);
+    font-weight: 900;
+    color: var(--ink);
+    margin-bottom: 22px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .section-intro {
+    font-size: 18px;
+    color: var(--muted);
+    max-width: 780px;
+    line-height: 1.8;
+    margin-bottom: 58px;
+  }
+
+  /* ===== INTRO ===== */
+  .intro-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  .pull-quote {
+    background: var(--paper-warm);
+    border-right: 4px solid var(--accent);
+    padding: 28px 32px;
+    margin: 20px 0;
+    font-family: 'Amiri', serif;
+    font-size: 21px;
+    line-height: 1.75;
+    color: var(--ink);
+    font-style: italic;
+    position: relative;
+  }
+
+  .pull-quote::before {
+    content: '"';
+    position: absolute;
+    top: -8px; right: 20px;
+    font-family: 'Playfair Display', serif;
+    font-size: 72px;
+    color: var(--gold);
+    opacity: 0.38;
+    line-height: 1;
+  }
+
+  .pull-quote cite {
+    display: block;
+    margin-top: 14px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 13px;
+    font-style: normal;
+    color: var(--muted);
+  }
+
+  /* ===== MODELS ===== */
+  .models-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+
+  .model-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 34px 30px;
+    position: relative;
+    transition: all 0.38s cubic-bezier(0.4,0,0.2,1);
+    overflow: hidden;
+    cursor: default;
+  }
+
+  .model-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 0; height: 100%;
+    background: var(--ink);
+    transition: width 0.38s cubic-bezier(0.4,0,0.2,1);
+    z-index: 0;
+  }
+
+  .model-card:hover::before { width: 100%; }
+  .model-card:hover { border-color: var(--ink); }
+  .model-card:hover .model-num,
+  .model-card:hover .model-name,
+  .model-card:hover .model-name-ar,
+  .model-card:hover .model-desc,
+  .model-card:hover .model-eg { color: var(--paper); }
+  .model-card:hover .model-tag { background: var(--gold); color: var(--paper); }
+  .model-card:hover .model-eg { border-color: rgba(249,247,244,0.2); }
+
+  .model-card > * { position: relative; z-index: 1; }
+
+  .model-num {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--gold-deep);
+    margin-bottom: 14px;
+    transition: color 0.3s;
+  }
+
+  .model-name {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 24px;
+    color: var(--ink);
+    margin-bottom: 4px;
+    line-height: 1.2;
+    transition: color 0.3s;
+  }
+
+  .model-name-ar {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 18px;
+    transition: color 0.3s;
+  }
+
+  .model-tag {
+    display: inline-block;
+    background: var(--paper-warm);
+    color: var(--ink);
+    padding: 3px 11px;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+    transition: all 0.3s;
+  }
+
+  .model-desc {
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: var(--ink-deep);
+    margin-bottom: 18px;
+    transition: color 0.3s;
+  }
+
+  .model-eg {
+    border-top: 1px solid var(--line);
+    padding-top: 14px;
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.6;
+    transition: all 0.3s;
+  }
+
+  .model-eg strong { color: var(--accent); font-weight: 700; }
+
+  /* ===== COMPANIES ===== */
+  .companies-bg {
+    background: var(--paper-warm);
+    margin: 0 -32px;
+    padding: 96px 32px;
+  }
+
+  .company-row {
+    display: grid;
+    grid-template-columns: 90px 190px 1fr 130px;
+    gap: 28px;
+    align-items: center;
+    padding: 32px 0;
+    border-bottom: 1px solid var(--line);
+    transition: padding 0.3s;
+  }
+
+  .company-row:hover { padding-right: 14px; }
+  .company-row:last-child { border-bottom: none; }
+
+  .company-rank {
+    font-family: 'Playfair Display', serif;
+    font-size: 58px;
+    font-weight: 900;
+    color: var(--gold);
+    line-height: 1;
+    opacity: 0.55;
+  }
+
+  .company-name {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 26px;
+    color: var(--ink);
+    line-height: 1.1;
+  }
+
+  .company-origin {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .company-desc {
+    font-size: 14.5px;
+    line-height: 1.72;
+    color: var(--ink-deep);
+  }
+
+  .company-desc strong { color: var(--accent); font-weight: 700; }
+
+  .company-stat {
+    text-align: left;
+    padding-right: 22px;
+    border-right: 2px solid var(--accent);
+  }
+
+  .company-stat-num {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 28px;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  .company-stat-label {
+    font-size: 11.5px;
+    color: var(--muted);
+    margin-top: 5px;
+    line-height: 1.35;
+  }
+
+  /* ===== TIMELINE ===== */
+  .tl-toggle {
+    display: flex;
+    gap: 0;
+    margin-bottom: 56px;
+    border: 1px solid var(--ink);
+    width: fit-content;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .tl-btn {
+    background: var(--paper);
+    color: var(--ink);
+    border: none;
+    padding: 11px 26px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.28s;
+  }
+
+  .tl-btn.active { background: var(--ink); color: var(--paper); }
+  .tl-btn:not(.active):hover { background: var(--paper-warm); }
+
+  .timeline {
+    position: relative;
+    padding: 16px 0;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    right: 50%;
+    width: 2px;
+    background: var(--line);
+    transform: translateX(50%);
+  }
+
+  .tl-item {
+    display: grid;
+    grid-template-columns: 1fr 76px 1fr;
+    gap: 28px;
+    margin-bottom: 58px;
+    align-items: center;
+    opacity: 0;
+    transform: translateY(18px);
+    animation: fadeUp 0.55s forwards;
+  }
+
+  .tl-item:nth-child(1) { animation-delay: 0.05s; }
+  .tl-item:nth-child(2) { animation-delay: 0.12s; }
+  .tl-item:nth-child(3) { animation-delay: 0.19s; }
+  .tl-item:nth-child(4) { animation-delay: 0.26s; }
+  .tl-item:nth-child(5) { animation-delay: 0.33s; }
+  .tl-item:nth-child(6) { animation-delay: 0.40s; }
+  .tl-item:nth-child(7) { animation-delay: 0.47s; }
+
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+  .tl-year {
+    grid-column: 2;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 28px;
+    text-align: center;
+    color: var(--paper);
+    background: var(--ink);
+    width: 76px; height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    position: relative;
+    z-index: 2;
+    line-height: 1;
+  }
+
+  .tl-year.future {
+    background: var(--paper);
+    color: var(--accent);
+    border: 2px dashed var(--accent);
+  }
+
+  .tl-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 22px 26px;
+  }
+
+  .tl-item.right .tl-card { grid-column: 1; }
+  .tl-item.left  .tl-card { grid-column: 3; }
+
+  .tl-card::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 14px; height: 1px;
+    background: var(--line);
+  }
+
+  .tl-item.right .tl-card::after { right: -14px; }
+  .tl-item.left  .tl-card::after { left: -14px; }
+
+  .tl-card-flag {
+    display: inline-block;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin-bottom: 7px;
+    padding: 2px 9px;
+    font-weight: 600;
+  }
+
+  .tl-card-flag.global { background: var(--ink); color: var(--paper); }
+  .tl-card-flag.local  { background: var(--accent); color: var(--paper); }
+  .tl-card-flag.warning { background: #8b3a22; color: var(--paper); }
+
+  .tl-card h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--ink);
+    margin-bottom: 7px;
+    line-height: 1.25;
+  }
+
+  .tl-card p {
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.62;
+  }
+
+  .tl-card .tl-model {
+    margin-top: 10px;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 12.5px;
+    color: var(--gold-deep);
+  }
+
+  /* ===== CHALLENGES ===== */
+  .challenges-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 38px;
+  }
+
+  .challenge {
+    border-top: 4px solid var(--accent);
+    padding-top: 18px;
+  }
+
+  .challenge .ch-num {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--gold-deep);
+    font-size: 13px;
+    margin-bottom: 11px;
+  }
+
+  .challenge h4 {
+    font-size: 21px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 11px;
+    line-height: 1.3;
+  }
+
+  .challenge p {
+    font-size: 14.5px;
+    line-height: 1.72;
+    color: var(--ink-deep);
+  }
+
+  /* ===== AMAZON CALLOUT ===== */
+  .amazon-callout {
+    background: #f9f0ed;
+    border: 1px solid #e0c4b8;
+    border-right: 5px solid #c04b2a;
+    padding: 28px 34px;
+    margin: 48px 0;
+  }
+
+  .amazon-callout h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .amazon-callout p {
+    font-size: 15.5px;
+    line-height: 1.78;
+    color: var(--ink-deep);
+  }
+
+  /* ===== FUTURE ===== */
+  .future {
+    background: var(--ink);
+    color: var(--paper);
+    margin: 0 -32px;
+    padding: 116px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .future::before {
+    content: 'AI';
+    position: absolute;
+    top: 50%; left: -40px;
+    transform: translateY(-50%);
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 520px;
+    line-height: 1;
+    color: rgba(249,247,244,0.025);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .future .container { position: relative; z-index: 1; }
+
+  .future .section-eyebrow { color: var(--gold); }
+  .future .section-eyebrow .ch { color: var(--gold); }
+  .future .section-eyebrow::after { background: rgba(249,247,244,0.12); }
+  .future .section-title { color: var(--paper); }
+  .future .section-intro { color: rgba(249,247,244,0.68); }
+
+  .future-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 38px;
+    margin-top: 56px;
+  }
+
+  .future-item {
+    border-top: 2px solid var(--gold);
+    padding-top: 22px;
+  }
+
+  .future-item h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    margin-bottom: 14px;
+    color: var(--paper);
+    line-height: 1.2;
+  }
+
+  .future-item p {
+    font-size: 14.5px;
+    line-height: 1.72;
+    color: rgba(249,247,244,0.78);
+  }
+
+  /* ===== AI VS TRADITIONAL TABLE ===== */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 40px;
+    font-size: 15px;
+  }
+
+  .compare-table th {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 12px 16px;
+    text-align: center;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .compare-table td {
+    padding: 11px 16px;
+    border: 1px solid var(--line);
+    text-align: right;
+    vertical-align: top;
+    line-height: 1.6;
+  }
+
+  .compare-table tr:nth-child(even) td { background: var(--paper-warm); }
+
+  .compare-table td:first-child {
+    font-weight: 600;
+    color: var(--accent);
+    background: rgba(192,75,42,0.04);
+    width: 22%;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: var(--ink-deep);
+    color: var(--paper);
+    padding: 56px 32px 36px;
+  }
+
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 44px;
+    margin-bottom: 36px;
+  }
+
+  .footer-about h5, .footer-col h5 {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    margin-bottom: 14px;
+    color: var(--gold);
+  }
+
+  .footer-about p {
+    font-size: 13.5px;
+    line-height: 1.72;
+    color: rgba(249,247,244,0.68);
+  }
+
+  .footer-col ul { list-style: none; }
+
+  .footer-col li {
+    font-size: 13.5px;
+    margin-bottom: 7px;
+    color: rgba(249,247,244,0.65);
+  }
+
+  .footer-col a {
+    color: rgba(249,247,244,0.65);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-col a:hover { color: var(--gold); }
+
+  .footer-bottom {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 22px;
+    border-top: 1px solid rgba(249,247,244,0.1);
+    display: flex;
+    justify-content: space-between;
+    font-size: 11.5px;
+    color: rgba(249,247,244,0.42);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  /* ===== TOOLTIP ===== */
+  .term {
+    position: relative;
+    display: inline-block;
+    cursor: help;
+    border-bottom: 1.5px dotted var(--gold);
+    padding-bottom: 1px;
+    transition: color 0.2s;
+  }
+
+  .term:hover { color: var(--accent); }
+
+  .term-tip {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    right: 50%;
+    transform: translateX(50%) translateY(6px);
+    background: var(--ink-deep);
+    color: var(--paper);
+    padding: 10px 14px;
+    border-radius: 5px;
+    font-size: 13px;
+    width: max-content;
+    max-width: 260px;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.22s ease, transform 0.22s ease;
+    z-index: 200;
+    box-shadow: 0 10px 28px rgba(13,31,56,0.28);
+    line-height: 1.55;
+  }
+
+  .term-tip::after {
+    content: '';
+    position: absolute;
+    top: 100%; right: 50%;
+    transform: translateX(50%);
+    border: 5px solid transparent;
+    border-top-color: var(--ink-deep);
+  }
+
+  .term:hover .term-tip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(50%) translateY(0);
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .hero-bottom { grid-template-columns: repeat(2, 1fr); }
+    .intro-grid { grid-template-columns: 1fr; gap: 28px; }
+    .models-grid { grid-template-columns: 1fr; }
+    .company-row { grid-template-columns: 60px 1fr; gap: 14px; }
+    .company-desc, .company-stat { grid-column: 1 / -1; }
+    .company-stat { border-right: none; padding-right: 0; text-align: right; }
+    .timeline::before { right: 28px; }
+    .tl-item { grid-template-columns: 62px 1fr; }
+    .tl-year { grid-column: 1; width: 62px; height: 62px; font-size: 22px; }
+    .tl-item.right .tl-card,
+    .tl-item.left  .tl-card { grid-column: 2; }
+    .future-grid, .challenges-grid { grid-template-columns: 1fr; }
+    .footer-inner { grid-template-columns: 1fr; }
+    .future::before { font-size: 260px; }
+    .compare-table { font-size: 13px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<h1 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">الذكاء الاصطناعي في الموارد البشرية — فرز السير الذاتية بنماذج OCR وDocument AI</h1>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="hero-top container" style="padding:0;">
+    <span class="badge">HR × AI</span>
+  </div>
+
+  <div class="hero-center">
+    <div class="hero-eyebrow">A research case study in</div>
+    <h1>الذكاء الاصطناعي<br>في صناعة <span class="accent">الموارد البشرية</span></h1>
+    <p class="hero-sub">كيف تستخدم نماذج <span class="en">OCR</span> و<span class="en">Document AI</span> لفرز ملايين السير الذاتية — وهل هذه الأنظمة عادلة فعلاً؟</p>
+  </div>
+
+  <div class="hero-bottom container" style="padding:0;">
+    <div class="stat">
+      <div class="stat-num"><span class="num">30.8</span><span class="unit">مليار $</span></div>
+      <div class="stat-label">يتوقع أن يكون حجم سوق الذكاء الاصطناعي في الموارد البشرية بحلول 2034</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num"><span class="num">75</span><span class="unit">٪</span></div>
+      <div class="stat-label">من السير الذاتية تُرفض آلياً قبل أن تصل لأي إنسان</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num"><span class="num">250</span><span class="unit">+</span></div>
+      <div class="stat-label">متوسط عدد المتقدمين لكل وظيفة واحدة (Glassdoor)</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num"><span class="num">83</span><span class="unit">٪</span></div>
+      <div class="stat-label">من الشركات تخطط لتوظيف الذكاء الاصطناعي في مراجعة السير الذاتية 2025</div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== NAV ===== -->
+<nav class="nav">
+  <div class="nav-inner">
+    <span class="nav-logo">AI × HR Recruitment</span>
+    <ul class="nav-links">
+      <li><a href="#intro">المقدمة</a></li>
+      <li><a href="#models">النماذج</a></li>
+      <li><a href="#companies">الشركات</a></li>
+      <li><a href="#timeline">الخط الزمني</a></li>
+      <li><a href="#challenges">التحديات</a></li>
+      <li><a href="#future">المستقبل</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ===== INTRO ===== -->
+<section id="intro">
+  <div class="container">
+    <div class="section-eyebrow"><span class="ch num">1</span><span>المقدمة</span></div>
+    <h2 class="section-title">ثلاثة أرباع السير الذاتية<br>لا يراها إنسان</h2>
+    <p class="section-intro">قبل أن يقرأ أي مسؤول توظيف سيرتك الذاتية، تقرأها خوارزمية. هذا ليس مستقبلاً —إنما هو الحاضر في كل شركة تتلقى مئات الطلبات يومياً.</p>
+
+    <div class="intro-grid">
+      <div>
+        <p style="font-size:17px;line-height:1.92;margin-bottom:18px;">صناعة الموارد البشرية تعالج مشكلة توسع حقيقية: شركة كبرى قد تتلقى يومياً آلاف السير الذاتية لوظائف مختلفة. المراجعة اليدوية مستحيلة بالسرعة المطلوبة، ومكلفة أيضا. وهنا دخل الذكاء الاصطناعي — ليس كرفاهية بل كضرورة.</p>
+        <p style="font-size:17px;line-height:1.92;">لكن السيرة الذاتية ليست مجرد نص — إنها <em>وثيقة بصرية</em>. جزء كبير منها يصل كـ<span class="en">PDF</span> ممسوح ضوئياً أو صورة بجودة متدنية. قبل أن تعمل أي خوارزمية ذكاء اصطناعي، يجب أولاً "قراءة" هذه الوثيقة — وهنا يبدأ دور <span class="term">OCR<span class="term-tip">Optical Character Recognition — التعرف البصري على الحروف: تقنية تحوّل الصور النصية إلى نصوص قابلة للمعالجة</span></span> ونماذج <span class="en">Document AI</span>.</p>
+      </div>
+
+      <div>
+        <blockquote class="pull-quote">
+          حين تكتب سيرتك الذاتية القادمة، ستكتبها على الأرجح لآلة تقرأها قبل أن تصل إلى إنسان — فهل يُغيّر ذلك طريقة كتابتك؟
+          <cite>— من خاتمة التقرير</cite>
+        </blockquote>
+      </div>
+    </div>
+
+    <!-- Comparison Table -->
+    <h3 style="font-size:22px;font-weight:700;color:var(--ink);margin-top:52px;margin-bottom:4px;">الذكاء الاصطناعي التقليدي مقابل التوليدي في فرز السير الذاتية</h3>
+    <p style="color:var(--muted);font-size:15px;margin-bottom:0;">كلاهما يعمل في هذه الصناعة — لكن لكلٍّ منهما دور مختلف.</p>
+
+    <table class="compare-table">
+      <tr>
+        <th>وجه المقارنة</th>
+        <th>Predictive AI — الذكاء التقليدي</th>
+        <th>Generative AI — الذكاء التوليدي</th>
+      </tr>
+      <tr>
+        <td>الهدف</td>
+        <td>فرز المتقدمين وترتيبهم تلقائياً</td>
+        <td>إنتاج وصف للوظائف وأسئلة مقابلات وتحليل شامل</td>
+      </tr>
+      <tr>
+        <td>النماذج</td>
+        <td>LayoutLM، BERT، OCR، CNN</td>
+        <td>GPT، Gemini، Claude، LLaMA</td>
+      </tr>
+      <tr>
+        <td>المخرجات</td>
+        <td>درجات تصنيف ثنائية (قبول / رفض)</td>
+        <td>نصوص مولّدة وتقارير تفسيرية</td>
+      </tr>
+      <tr>
+        <td>أمثلة شركات</td>
+        <td>Textkernel، ATS التقليدية</td>
+        <td>Eightfold AI (الجيل الجديد)، LinkedIn AI</td>
+      </tr>
+      <tr>
+        <td>التحدي الأبرز</td>
+        <td>التحيز في بيانات التدريب</td>
+        <td>قابلية التفسير وتكلفة الحوسبة</td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<!-- ===== MODELS ===== -->
+<section id="models" style="background:var(--paper-warm);margin:0 -32px;padding:96px 32px;">
+  <div class="container">
+    <div class="section-eyebrow"><span class="ch num">2</span><span>نماذج التعلم العميق</span></div>
+    <h2 class="section-title">ثلاثة نماذج تقنية<br>تُشغّل منظومة الفرز</h2>
+    <p class="section-intro">كل نموذج يحل مشكلة مختلفة في سلسلة معالجة السيرة الذاتية — من تحويل الصورة إلى نص، إلى فهم التخطيط، إلى استخلاص المعنى.</p>
+
+    <div class="models-grid">
+      <article class="model-card">
+        <div class="model-num en">Model · 01</div>
+        <h3 class="model-name">LayoutLM</h3>
+        <div class="model-name-ar">نموذج فهم المستندات — مايكروسوفت 2020</div>
+        <span class="model-tag">Document AI</span>
+        <p class="model-desc">يجمع ثلاثة أبعاد في آنٍ واحد: النص الخام + الإحداثيات المكانية لكل كلمة + المعلومات البصرية للصفحة. هذا التكامل يجعله الأمثل للسير الذاتية التي تحمل معنىً في تخطيطها لا نصها فحسب.</p>
+        <div class="model-eg"><strong>تطبيق:</strong> استخلاص حقول مهيكلة (الاسم، الخبرات، المهارات) من سير ذاتية متنوعة التنسيق — حتى متعددة الأعمدة.</div>
+      </article>
+
+      <article class="model-card">
+        <div class="model-num en">Model · 02</div>
+        <h3 class="model-name">BERT / RoBERTa</h3>
+        <div class="model-name-ar">نماذج Transformers للفهم الدلالي</div>
+        <span class="model-tag">NLP — Predictive AI</span>
+        <p class="model-desc">تعتمد الانتباه الثنائي الاتجاه لفهم معنى كل كلمة في سياقها الكامل. تُميّز مثلاً بين "Python" كلغة برمجة في سياق تقني، و"Python" في سياق آخر. حاسمة في مطابقة مهارات المتقدم مع متطلبات الوظيفة دلالياً.</p>
+        <div class="model-eg"><strong>تطبيق:</strong> <span class="en">Eightfold.ai</span> تستنتج مهارات ضمنية من خبرات المتقدم — من لم يذكر "قيادة الفريق" لكن أدار مشاريع لخمس سنوات يُحتسب له ذلك.</div>
+      </article>
+
+      <article class="model-card">
+        <div class="model-num en">Model · 03</div>
+        <h3 class="model-name">OCR Models</h3>
+        <div class="model-name-ar">التعرف البصري على الحروف</div>
+        <span class="model-tag">Foundational Layer</span>
+        <p class="model-desc">العتبة الأولى التي تُحدد كل ما يأتي بعدها. نماذج مثل <span class="en">Tesseract</span> (مفتوح المصدر) و<span class="en">AWS Textract</span> و<span class="en">PaddleOCR</span> تُحوّل ملفات PDF الممسوحة والصور إلى نص قابل للمعالجة — خطأ في هذه الخطوة يتضاعف في كل ما يليها.</p>
+        <div class="model-eg"><strong>تطبيق:</strong> منصات <span class="en">ATS</span> مثل <span class="en">Greenhouse</span> تدمج <span class="en">AWS Textract</span> كخطوة أولى لكل ملف مرفوع.</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== COMPANIES ===== -->
+<section id="companies">
+  <div class="container">
+    <div class="section-eyebrow"><span class="ch num">3</span><span>الشركات الرائدة</span></div>
+    <h2 class="section-title">من يصنع هذا القطاع<br>في العالم اليوم</h2>
+    <p class="section-intro">أربع حالات دراسية تغطي أربعة أنماط مختلفة: منصة تستنتج الإمكانية، محرك معالجة متخصص، منصة تجمع الفرز بالمقابلات، ودرس من شركة عملاقة تعلّمت بالطريقة الصعبة.</p>
+
+    <div class="companies-bg" style="margin:0 -32px;padding:0 32px;">
+
+    <div class="company-row">
+      <div class="company-rank num">01</div>
+      <div>
+        <div class="company-name">Eightfold.ai</div>
+        <div class="company-origin">USA · Est. 2016</div>
+      </div>
+      <p class="company-desc">منصة "Talent Intelligence" تذهب أبعد من مطابقة الكلمات المفتاحية — تُحلّل الإمكانية المستقبلية للمتقدم وتستنتج المهارات الضمنية من سياق الخبرات. في نسختها الأحدث تدمج <strong>LLM Agents</strong> تُحلّل GitHub وLinkedIn والـCV في تقييم موحّد.</p>
+      <div class="company-stat">
+        <div class="company-stat-num">8–14٪</div>
+        <div class="company-stat-label">ارتفاع تمثيل المجموعات المهمشة في قوائم المرشحين</div>
+      </div>
+    </div>
+
+    <div class="company-row">
+      <div class="company-rank num">02</div>
+      <div>
+        <div class="company-name">Textkernel</div>
+        <div class="company-origin">Netherlands · Est. 2001</div>
+      </div>
+      <p class="company-desc">لا تبيع للشركات مباشرة — بل تُزوّد أكثر من <strong>2500 بائع برمجيات HR</strong> بتقنياتها. رائدة معالجة السير الذاتية بأكثر من 30 لغة تشمل العربية، مع نظام مطابقة دلالية يُوازن بين كفاءات المتقدم ومتطلبات الدور.</p>
+      <div class="company-stat">
+        <div class="company-stat-num">2,500+</div>
+        <div class="company-stat-label">عميل من بائعي البرمجيات والجهات الحكومية</div>
+      </div>
+    </div>
+
+    <div class="company-row">
+      <div class="company-rank num">03</div>
+      <div>
+        <div class="company-name">HireVue</div>
+        <div class="company-origin">USA · Enterprise</div>
+      </div>
+      <p class="company-desc">تجمع فرز السير الذاتية مع المقابلات المصوّرة والتقييمات في منصة واحدة. حالة <strong>Unilever</strong> الأشهر: خفّضت دورة التوظيف من 4–6 أشهر إلى شهرين، مع تصفية <strong>80٪</strong> من الطلبات آلياً قبل أي تدخل بشري.</p>
+      <div class="company-stat">
+        <div class="company-stat-num">700+</div>
+        <div class="company-stat-label">شركة تستخدمها من بينها كبرى شركات Fortune 500</div>
+      </div>
+    </div>
+
+    <div class="company-row">
+      <div class="company-rank num">04</div>
+      <div>
+        <div class="company-name">Amazon</div>
+        <div class="company-origin">USA · 2014–2018 (Cancelled)</div>
+      </div>
+      <p class="company-desc">الحالة التحذيرية الأشهر في القطاع. نظام دُرِّب على سير ذاتية تاريخية ذكورية تعلّم أن "الذكورة" مؤشر كفاءة. كان يُخفّض تلقائياً تقييم أي سيرة تحتوي على كلمة "نساء". أُوقف المشروع عام 2017 — لكن الدرس لا يزال يُذكر في كل نقاش عن <strong>التحيز الخوارزمي</strong>.</p>
+      <div class="company-stat">
+        <div class="company-stat-num" style="color:var(--accent);">Cancelled</div>
+        <div class="company-stat-label">بسبب تحيز منهجي لا يمكن إصلاحه</div>
+      </div>
+    </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== TIMELINE ===== -->
+<section id="timeline">
+  <div class="container">
+    <div class="section-eyebrow"><span class="ch num">4</span><span>الخط الزمني</span></div>
+    <h2 class="section-title">تطور المجال<br>من <span class="num">2001</span> إلى <span class="num">2030</span></h2>
+    <p class="section-intro">من محرك CV parsing بدائي إلى منظومة ذكاء اصطناعي شاملة — والتحولات القانونية التي تُعيد رسم حدود الممكن.</p>
+
+    <div class="tl-toggle" role="tablist">
+      <button class="tl-btn active" data-filter="all">الكل</button>
+      <button class="tl-btn" data-filter="global">تقني</button>
+      <button class="tl-btn" data-filter="local">قانوني</button>
+    </div>
+
+    <div class="timeline" id="timeline-container">
+
+      <div class="tl-item right" data-track="global">
+        <div class="tl-card">
+          <span class="tl-card-flag global">Technical</span>
+          <h4>Textkernel تُؤسَّس</h4>
+          <p>أولى المنصات المتخصصة في CV parsing بالمعالجة اللغوية — بداية أتمتة قراءة السير الذاتية.</p>
+          <div class="tl-model en">NLP + Regex</div>
+        </div>
+        <div class="tl-year num">2001</div>
+      </div>
+
+      <div class="tl-item left" data-track="global">
+        <div class="tl-year num">2014</div>
+        <div class="tl-card">
+          <span class="tl-card-flag global">Technical</span>
+          <h4>Amazon AI Recruiter — البداية</h4>
+          <p>أمازون تبدأ سراً مشروع نظام توظيف آلي يُدرَّب على سير ذاتية تاريخية امتدت عشر سنوات.</p>
+          <div class="tl-model en">Machine Learning</div>
+        </div>
+      </div>
+
+      <div class="tl-item right" data-track="global">
+        <div class="tl-card">
+          <span class="tl-card-flag global">Technical</span>
+          <h4>Eightfold.ai تُؤسَّس</h4>
+          <p>منصة Talent Intelligence مبنية على Deep Learning تُقدّم فكرة جديدة: المتقدم أكثر من سيرة ذاتية.</p>
+          <div class="tl-model en">Deep Learning + Transformers</div>
+        </div>
+        <div class="tl-year num">2016</div>
+      </div>
+
+      <div class="tl-item left" data-track="warning">
+        <div class="tl-year num" style="background:var(--accent);">2018</div>
+        <div class="tl-card" style="border-right:4px solid var(--accent);">
+          <span class="tl-card-flag warning">⚠ Warning</span>
+          <h4>أمازون توقف المشروع</h4>
+          <p>Reuters تكشف أن نظام أمازون ينحاز ضد النساء بشكل منهجي. الشركة أوقفته مطلع 2017 لكن الخبر يُصدم الصناعة بأكملها.</p>
+          <div class="tl-model" style="color:var(--accent);">Lesson: Biased Training Data</div>
+        </div>
+      </div>
+
+      <div class="tl-item right" data-track="global">
+        <div class="tl-card">
+          <span class="tl-card-flag global">Technical</span>
+          <h4>LayoutLM — مايكروسوفت</h4>
+          <p>نموذج يجمع النص + التخطيط المكاني للمستند. ثورة في Document AI تُغيّر معادلة تحليل السير الذاتية المعقدة.</p>
+          <div class="tl-model en">LayoutLM → ACL 2020</div>
+        </div>
+        <div class="tl-year num">2020</div>
+      </div>
+
+      <div class="tl-item left" data-track="local">
+        <div class="tl-year num" style="background:#2c5e2e;">2023</div>
+        <div class="tl-card" style="border-right:4px solid #2c5e2e;">
+          <span class="tl-card-flag" style="background:#2c5e2e;color:white;">Legal</span>
+          <h4>NYC Local Law 144</h4>
+          <p>نيويورك تُقرّ قانوناً يُلزم أصحاب العمل بتدقيق سنوي مستقل على أدوات التوظيف الآلية — أول تشريع أمريكي من نوعه.</p>
+          <div class="tl-model" style="color:#2c5e2e;">Regulatory milestone</div>
+        </div>
+      </div>
+
+      <div class="tl-item right" data-track="local">
+        <div class="tl-card" style="border-right:4px solid #2c5e2e;">
+          <span class="tl-card-flag" style="background:#2c5e2e;color:white;">Legal</span>
+          <h4>EU AI Act — تطبيق تدريجي</h4>
+          <p>الاتحاد الأوروبي يُصنّف أنظمة التوظيف ضمن "عالية المخاطر" — متطلبات شفافية وتوثيق إلزامية لكل نظام فرز آلي.</p>
+          <div class="tl-model" style="color:#2c5e2e;">High-Risk AI Category</div>
+        </div>
+        <div class="tl-year num" style="background:#2c5e2e;">2024</div>
+      </div>
+
+      <div class="tl-item left" data-track="global">
+        <div class="tl-year num future">2030</div>
+        <div class="tl-card" style="border:2px dashed var(--accent);background:rgba(192,75,42,0.03);">
+          <span class="tl-card-flag warning">Future</span>
+          <h4>التوظيف القائم على المهارات</h4>
+          <p>تتوقع الأبحاث أن نماذج LLM المتعددة الوسائط ستُتيح تقييم المتقدم من مصادر متنوعة (CV + GitHub + Video) في منظومة واحدة مع ضمانات Explainable AI.</p>
+          <div class="tl-model" style="color:var(--accent);">Skills-Based + Multimodal AI</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== CHALLENGES ===== -->
+<section id="challenges">
+  <div class="container">
+    <div class="section-eyebrow"><span class="ch num">5</span><span>التحديات</span></div>
+    <h2 class="section-title">ما لا يظهر في<br>الإعلانات التسويقية</h2>
+    <p class="section-intro">الذكاء الاصطناعي في التوظيف ليس إجابة سحرية — ثمة تحديات جوهرية تستوجب النقاش الصريح.</p>
+
+    <div class="amazon-callout">
+      <h4>درس أمازون — 2018</h4>
+      <p>دُرِّب نظام التوظيف على سيرٍ ذاتية من عشر سنوات كانت الغالبية العظمى منها لرجال. تعلّم النموذج أن "الذكورة" مؤشر إيجابي للنجاح. كان يُخفّض تقييم أي سيرة تذكر "نادي الشطرنج النسائي"، ويُفضّل الأفعال الشائعة في سير الرجال.</p>
+    </div>
+
+    <div class="challenges-grid">
+      <div class="challenge">
+        <div class="ch-num en">Challenge · 01</div>
+        <h4>التحيز الخوارزمي</h4>
+        <p>النموذج لا يخلق التحيز من الفراغ — يجده في البيانات ويُعيد إنتاجه على نطاق أوسع. اختيار بيانات التدريب قرار أخلاقي قبل أن يكون قراراً تقنياً.</p>
+      </div>
+
+      <div class="challenge">
+        <div class="ch-num en">Challenge · 02</div>
+        <h4>تنوع التنسيقات</h4>
+        <p>السير الذاتية الحقيقية فوضى منظمة: PDF نصي وآخر ممسوح، Word بأعمدة متعددة، صور هاتف بجودة متدنية، ومزج عربي-إنجليزي في مستند واحد. كل خطأ OCR يتضاعف لاحقاً.</p>
+      </div>
+
+      <div class="challenge">
+        <div class="ch-num en">Challenge · 03</div>
+        <h4>غياب الشفافية</h4>
+        <p>حين يرفض نظام آلي سيرة ذاتية دون تفسير، يُحرَم المتقدم من حق التظلّم. وحين تشتري شركة صغيرة منصة ATS جاهزة، لا تعلم أحياناً شيئاً عن الخوارزميات التي تشغّلها باسمها.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FUTURE ===== -->
+<section id="future" class="future">
+  <div class="container">
+    <div class="section-eyebrow"><span class="ch num">6</span><span>المستقبل</span></div>
+    <h2 class="section-title">ثلاثة تحوّلات قادمة<br>في خمس سنوات</h2>
+    <p class="section-intro">سوق العمل والتشريعات والتطور التقني تتقاطع لتُشكّل مشهداً مغايراً للتوظيف بحلول 2030.</p>
+
+    <div class="future-grid">
+      <div class="future-item">
+        <h4>Skills-Based Hiring</h4>
+        <p>نماذج <span class="en">LLM</span> تجعل ممكناً اكتشاف المهارات الضمنية دون اشتراط شهادات بعينها. شركات متزايدة تحذف "درجة البكالوريوس" من متطلباتها — والذكاء الاصطناعي هو ما يُتيح هذا التحول دون فوضى.</p>
+      </div>
+
+      <div class="future-item">
+        <h4>Multimodal Hiring AI</h4>
+        <p>السيرة الذاتية لن تكفي وحدها. منصات الجيل القادم ستُحلّل <span class="en">GitHub + LinkedIn + CV + Video Interview</span> في منظومة واحدة باستخدام نماذج متعددة الوسائط مثل <span class="en">GPT-4o</span> وما سيليه.</p>
+      </div>
+
+      <div class="future-item">
+        <h4>Explainable AI — إلزامي</h4>
+        <p>الضغط التشريعي من <span class="en">EU AI Act</span> وقانون نيويورك سيُجبر الصناعة على قرارات قابلة للتفسير والطعن. الذكاء الاصطناعي "الصندوق الأسود" لن يكون مقبولاً قانونياً في قرارات التوظيف.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-about">
+      <h5>عن هذا البحث</h5>
+      <p>بحث أكاديمي في مقرر <span class="en">Advanced Deep Learning</span> يستعرض تطبيقات الذكاء الاصطناعي في صناعة الموارد البشرية، مع التركيز على نماذج <span class="en">OCR</span> و<span class="en">Document AI</span> لفرز السير الذاتية. نُشرت على <span class="en">GitHub Pages</span>. جميع الإحصاءات والشركات موثّقة من مصادر علمية وصناعية.</p>
+    </div>
+
+    <div class="footer-col">
+      <h5>المصادر الرئيسية</h5>
+      <ul>
+        <li>arXiv 2510.09722 (2025)</li>
+        <li>Grand View Research (2024)</li>
+        <li>Precedence Research (2024)</li>
+        <li>Reuters — Dastin (2018)</li>
+        <li>HeroHunt.ai Report (2025)</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h5>الشركات المذكورة</h5>
+      <ul>
+        <li><a href="https://eightfold.ai" target="_blank">Eightfold AI</a></li>
+        <li><a href="https://textkernel.com" target="_blank">Textkernel</a></li>
+        <li><a href="https://hirevue.com" target="_blank">HireVue</a></li>
+        <li><a href="https://aws.amazon.com/textract" target="_blank">AWS Textract</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>بحث في مقرر <span class="en">Advanced Deep Learning · 2026</span></span>
+    <span class="en">Hosted on GitHub Pages</span>
+  </div>
+</footer>
+
+<script>
+  // Timeline filter
+  const btns = document.querySelectorAll('.tl-btn');
+  const items = document.querySelectorAll('.tl-item');
+
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      items.forEach(item => {
+        const track = item.dataset.track;
+        if (f === 'all' || track === f || (f === 'local' && track === 'local') || (f === 'global' && (track === 'global' || track === 'warning'))) {
+          item.style.display = '';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    });
+  });
+
+  // Smooth scroll
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) window.scrollTo({ top: target.offsetTop - 72, behavior: 'smooth' });
+    });
+  });
+</script>
+
+</body>
+</html>
